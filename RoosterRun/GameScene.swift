@@ -11,25 +11,26 @@ import GameplayKit
 
 class GameScene: SKScene {
     
-    private var label : SKLabelNode?
     private var fireworks : SKSpriteNode?
     private var spinnyNode : SKShapeNode?
     
     private var fireworks_init_xpos : CGFloat?
     
+    private var fireworksList : Array<SKSpriteNode> = Array()
+    
     override func didMove(to view: SKView) {
         
         // Get label node from scene and store it for use later
-        self.label = self.childNode(withName: "//helloLabel") as? SKLabelNode
         self.fireworks = self.childNode(withName: "fireworks") as? SKSpriteNode
-        
-        if let label = self.label {
-            label.alpha = 0.0
-            label.run(SKAction.fadeIn(withDuration: 2.0))
-        }
         
         //get initial firworks position
         self.fireworks_init_xpos = self.fireworks?.position.x
+        
+        //initialize fireworksList
+        if let n = self.fireworks?.copy() as! SKSpriteNode? {
+            self.addChild(n)
+            self.fireworksList.append(n)
+        }
         
         // Create shape node to use during mouse interaction
         let w = (self.size.width + self.size.height) * 0.05
@@ -71,9 +72,6 @@ class GameScene: SKScene {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if let label = self.label {
-            label.run(SKAction.init(named: "Pulse")!, withKey: "fadeInOut")
-        }
         
         for t in touches { self.touchDown(atPoint: t.location(in: self)) }
     }
@@ -93,16 +91,30 @@ class GameScene: SKScene {
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
-        let xpos = self.fireworks!.position.x
-        let ypos = self.fireworks!.position.y
+        let screen_zero : CGFloat = -376.0 //change this to a variable
+        let screen_max_lower : CGFloat = 200.0
+        let screen_max_upper: CGFloat = 203.0
         
-        print(xpos)
+        print(fireworksList.count)
         
-        let zero : CGFloat = -376.0 //change this to a variable
-        if(xpos <= zero) {
-            self.fireworks?.position = CGPoint(x: fireworks_init_xpos!, y: ypos)
-        } else {
-            self.fireworks?.position = CGPoint(x: xpos - 1, y: ypos)
+        for (i, fireworks) in fireworksList.enumerated() {
+            let xpos = fireworks.position.x
+            let ypos = fireworks.position.y
+            
+            if(xpos <= screen_zero) {
+                fireworksList.remove(at: i)
+            } else {
+                if (i == fireworksList.count - 1 //last object
+                    && xpos >= screen_max_lower
+                    && xpos < screen_max_upper) {
+                    if let n = self.fireworks?.copy() as! SKSpriteNode? {
+                        self.addChild(n)
+                        fireworksList.append(n)
+                    }
+                }
+                
+                fireworks.position = CGPoint(x: xpos - 3, y: ypos)
+            }
         }
         
         
