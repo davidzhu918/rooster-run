@@ -12,6 +12,7 @@ import GameplayKit
 class GameScene: SKScene {
     
     private var fireworks : SKSpriteNode?
+    private var rooster : SKSpriteNode?
     private var spinnyNode : SKShapeNode?
     
     private var fireworks_init_xpos : CGFloat?
@@ -20,13 +21,16 @@ class GameScene: SKScene {
     
     override func didMove(to view: SKView) {
         
-        // Get label node from scene and store it for use later
+        // initialize originial firworks
         self.fireworks = self.childNode(withName: "fireworks") as? SKSpriteNode
         
-        //get initial firworks position
+        // initialize rooster
+        self.rooster = self.childNode(withName: "rooster") as? SKSpriteNode
+        
+        // get initial firworks position
         self.fireworks_init_xpos = self.fireworks?.position.x
         
-        //initialize fireworksList
+        // initialize fireworksList
         if let n = self.fireworks?.copy() as! SKSpriteNode? {
             self.addChild(n)
             self.fireworksList.append(n)
@@ -48,36 +52,16 @@ class GameScene: SKScene {
     
     
     func touchDown(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.green
-            self.addChild(n)
-        }
-    }
-    
-    func touchMoved(toPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.blue
-            self.addChild(n)
-        }
+        self.rooster?.texture = SKTexture(imageNamed: "rooster-nbg2")
+        self.rooster?.physicsBody?.applyImpulse(CGVector(dx: 0, dy: 100))
     }
     
     func touchUp(atPoint pos : CGPoint) {
-        if let n = self.spinnyNode?.copy() as! SKShapeNode? {
-            n.position = pos
-            n.strokeColor = SKColor.red
-            self.addChild(n)
-        }
+        self.rooster?.texture = SKTexture(imageNamed: "rooster-nbg")
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
         for t in touches { self.touchDown(atPoint: t.location(in: self)) }
-    }
-    
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        for t in touches { self.touchMoved(toPoint: t.location(in: self)) }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {

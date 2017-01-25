@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "RoosterRun/GameScene.swift"
-            timestampString = "507015409.831645"
+            timestampString = "507017915.713108"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "24"
-            endingLineNumber = "24"
+            startingLineNumber = "25"
+            endingLineNumber = "25"
             landmarkName = "didMove(to:)"
             landmarkType = "7">
          </BreakpointContent>
