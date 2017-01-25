@@ -12,16 +12,24 @@ import GameplayKit
 class GameScene: SKScene {
     
     private var label : SKLabelNode?
+    private var fireworks : SKSpriteNode?
     private var spinnyNode : SKShapeNode?
+    
+    private var fireworks_init_xpos : CGFloat?
     
     override func didMove(to view: SKView) {
         
         // Get label node from scene and store it for use later
         self.label = self.childNode(withName: "//helloLabel") as? SKLabelNode
+        self.fireworks = self.childNode(withName: "fireworks") as? SKSpriteNode
+        
         if let label = self.label {
             label.alpha = 0.0
             label.run(SKAction.fadeIn(withDuration: 2.0))
         }
+        
+        //get initial firworks position
+        self.fireworks_init_xpos = self.fireworks?.position.x
         
         // Create shape node to use during mouse interaction
         let w = (self.size.width + self.size.height) * 0.05
@@ -85,5 +93,18 @@ class GameScene: SKScene {
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
+        let xpos = self.fireworks!.position.x
+        let ypos = self.fireworks!.position.y
+        
+        print(xpos)
+        
+        let zero : CGFloat = -376.0 //change this to a variable
+        if(xpos <= zero) {
+            self.fireworks?.position = CGPoint(x: fireworks_init_xpos!, y: ypos)
+        } else {
+            self.fireworks?.position = CGPoint(x: xpos - 1, y: ypos)
+        }
+        
+        
     }
 }
